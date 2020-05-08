@@ -1,0 +1,25 @@
+#map .ol-layerswitcher label {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 1.6em;
+  padding-left: .6em;
+  height: 1em;
+  line-height: .9em;
+}
+#map .ol-layerswitcher label:before,
+#map .ol-layerswitcher label:after {
+  font-size: .9em;
+  background: none;
+  border: 0;
+  transform: unset;
+  left: -.2em;
+  top: .1em;
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  color: #369;
+  font-weight: bold;
+  box-shadow: unset;
+}
+.ol-layerswitcher [type="checkbox"]:checked + label::after {
+  content: "\2713";
+}

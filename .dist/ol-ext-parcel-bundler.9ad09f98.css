@@ -1,0 +1,119 @@
+body, button {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 1.5em;
+}
+
+#map {
+  position: fixed;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+#dialog {
+  font-size: 1.5em;
+  color: #666;
+  box-sizing: border-box;
+  background: #fff;
+  padding: 1em;
+  background: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.5) 5px 5px 10px 5px;
+  width: 60%;
+  max-width: 30em;
+  min-width: 50%;
+  max-height: 100%;
+  z-index: 1000;
+}
+@media screen and (max-width: 400px) {
+  #dialog {
+      width: 90%;
+  }
+}
+@media screen and (max-width: 700px) {
+  #dialog {
+      width: 80%;
+  }
+}
+#dialog h1 {
+  font-size: 2em;
+  margin: 0;
+  display: inline-block;
+}
+#dialog p {
+  margin: .5em 0;
+}
+#dialog .closeBox {
+  position: absolute;
+  top:0;
+  right: 0;
+  font-size: 2em;
+  margin: 0;
+  background: none;
+  color: #369;
+  padding: 0;
+  width: 1em;
+  height: 1em;
+  font-weight: bold;
+  font-style: normal;
+  cursor: pointer;
+}
+#dialog .closeBox:hover {
+  transform: scale(1.5);
+}
+#dialog .closeBox:before {
+  content: "\00d7";
+  font-size: 1.5em;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  text-align: center;
+  line-height: 1em;
+  margin: -0.5em 0;
+  position: absolute;
+}
+#dialog .buttons {
+  text-align: right;
+  border-top: 0px solid #666;
+  padding-top: .5em;
+  margin-bottom: 0;
+}
+.button {
+  font-weight: bold;
+  border: 0;
+  background: none;
+  background-image: url(/button.93c700a1.png);
+  background-size: 100% 100%;
+  color: rgba(0,0,0,.7);
+  padding: 0 .5em;
+  text-shadow: 2px 2px 10px #fff;
+}
+button.button {
+  outline:0;
+  cursor: pointer;
+}
+button.button:hover {
+  color: #003;
+  text-shadow: -2px -2px 20px #fff;
+}
+.ol-permalink {
+  display: none;
+}
+#map .ol-attribution ul {
+  font-size: .7em;
+  transform: scaleY(1.8);
+  line-height: 1em;
+  margin-top: 1em;
+  transform-origin: 0 30%;
+}
+#map .ol-zoom button {
+  font-size: 2em;
+  width: .8em;
+  height: .8em;
+  padding-bottom: .1em;
+}
+#map button{
+  outline: 0;
+}
+
+/*# sourceMappingURL=/ol-ext-parcel-bundler.9ad09f98.css.map */

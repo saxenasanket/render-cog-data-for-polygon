@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "cog-server-side-rendering",
+    "cog-1": "cog-server-side-rendering"
+  }
+}

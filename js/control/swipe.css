@@ -1,0 +1,7 @@
+/* Keep swipe under others controls */
+.ol-control {
+    z-index:1;
+}
+.ol-control.ol-swipe {
+    z-index:0;
+}

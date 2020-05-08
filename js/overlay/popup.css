@@ -1,0 +1,29 @@
+/* popup style */
+.ol-popup {
+  max-width:300px;
+  min-width:100px;
+  min-height:1em;
+  font-family: 'Lucida Grande',Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif;
+  color: #333;
+  font-size: .75em;
+}
+/* Image on popup */
+.ol-popup img {
+  float: left;
+  margin: 0 0.5em 0 0;
+  max-width: 100px;
+  max-height: 100px;
+}
+.ol-popup .closeBox {
+  font-size: 2em;
+  margin: 0;
+  background: none;
+  color: #369;
+  padding: 0;
+  width: 1em;
+  height: 1em;
+}
+.ol-popup .closeBox:hover {
+  background: none;
+  transform: scale(1.5);
+}
