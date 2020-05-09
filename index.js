@@ -19,9 +19,7 @@ import Polygon from 'ol/geom/polygon';
 import Feature from 'ol/feature';
 import Mask from 'ol-ext/filter/Mask';
 import Crop from 'ol-ext/filter/Crop';
-import ol_ext_inherits from 'ol-ext/util/ext';
-import Stamen from 'ol/source/Stamen.js';
-import LayerGroup from 'ol/layer/Group'
+
 
 var global_url='';
 
@@ -57,7 +55,8 @@ const map = new Map({
   layers: [
     osm,
     debugLayer,
-    labels
+    labels,
+    //polygonLayer
   ],
   view: new View({
     center: [0, 0],
@@ -81,25 +80,19 @@ function addInteraction() {
       source: source,
       type: 'Polygon'
     });
-
     draw.on('drawend',function (e) {
       var currentFeature = e.feature;//this is the feature fired the event
       var restOfFeats = source.getFeatures();//rest of feats
       var allFeats = restOfFeats.concat(currentFeature);//concatenate the event feat to the array of source feats
       console.log(e.feature);
       });
-
     map.addInteraction(draw);
   }
 }
 
-
 function onClick(id, callback) {
   document.getElementById(id).addEventListener('click', callback);
 }
-
-
-var check=0;
 
 function loadTiles(polygon,ftr){
 
@@ -119,14 +112,13 @@ function loadTiles(polygon,ftr){
     var defaultUrlFunction = cog.getTileUrlFunction();
     cog.setTileUrlFunction( function(tileCoord, pixelRatio, projection) {
       var condition=polygon.intersectsExtent(this.getTileGrid().getTileCoordExtent(tileCoord));
-      check=check+1;
       if (condition) {
           return defaultUrlFunction(tileCoord, pixelRatio, projection);
       } 
     });
 
     var layers = map.getLayers();
-    layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
+    //layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
     map.addLayer(cogLayer);
     //map.addLayer(polygonLayer)
 
@@ -150,59 +142,17 @@ function zoomLoad(name) {
   if (ValidURL(name)) {
     var url = encodeURIComponent(name)
     var boundsUrl = "https://tiles.rdnt.io/bounds?url=" + url;
-
-
     getJSON(boundsUrl, function(result) {
-
       var extent = transformExtent(result.bounds, 'EPSG:4326', 'EPSG:3857');
       map.getView().fit(extent, map.getSize());
-
-      /*var tilesUrl = createTilesUrl(url);
-
-      var cog=new XYZ({
-        url: tilesUrl
-      });
-
-      var cogLayer = new TileLayer({
-        type: 'base',
-        source: cog
-      });
-      cog.on('tileloadstart', function() {
-        console.log("loading started")
-      });
-      
-      cog.on('tileloadend', function() {
-        console.log("loading ended")
-      });
-     
-      var defaultUrlFunction = cog.getTileUrlFunction();
-      cog.setTileUrlFunction( function(tileCoord, pixelRatio, projection) {
-
-        console.log("tile coords=>",tileCoord)
-        //var condition=countryGeometry.intersectsExtent(this.getTileGrid().getTileCoordExtent(tileCoord));
-          if (1) {
-              return defaultUrlFunction(tileCoord, pixelRatio, projection);
-          }
-      });
-
-      var layers = map.getLayers();
-      layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
-      //map.addLayer(cogLayer);
-      update({
-        url: name
-      });*/
-
     }).fail(function(jqXHR, textStatus, errorThrown) {
       alert("Request failed. Are you sure '" + name + "' is a valid COG?  ");
     });
-    //TODO - include link to COG validator
-
   }
 }
 
 /* 
  * This creates the tiles URL. Change here to use another lambda server, or change the default params.
- * TODO: enable setting of things like RGB and linear stretch in the GUI, and then adjust the url's here.
  */
  function createTilesUrl(url) {
   return  "https://tiles.rdnt.io/tiles/{z}/{x}/{y}?url=" + url;
@@ -285,17 +235,13 @@ function listener(newState) {
     });
 
     map.addLayer(cogLayer);
-
     document.getElementById("cog-url").value = newState.url;
-    //This had an attempt to move to a COG location, but then it messed up with existing hashes.
-    //May consider adding a button that will zoom the user to the location of the COG displayed.
   }
 }
 
 function ValidURL(str) {
   if (!validUrl.isUri(str)) {
     alert("'" + str + "' is not a valid URL. Did you forget to include http://? ");
-    //TODO - automatically add in http:// if it's not included and check that.
     return false;
   } else {
     return true;

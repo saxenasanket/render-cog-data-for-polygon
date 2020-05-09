@@ -71184,186 +71184,7 @@ ol_filter_Crop.prototype.postcompose = function (e) {
 
 var _default = ol_filter_Crop;
 exports.default = _default;
-},{"../util/ext":"node_modules/ol-ext/util/ext.js","./Mask":"node_modules/ol-ext/filter/Mask.js"}],"node_modules/ol/source/Stamen.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _OSM = require("./OSM.js");
-
-var _XYZ = _interopRequireDefault(require("./XYZ.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @module ol/source/Stamen
- */
-var __extends = void 0 && (void 0).__extends || function () {
-  var extendStatics = function (d, b) {
-    extendStatics = Object.setPrototypeOf || {
-      __proto__: []
-    } instanceof Array && function (d, b) {
-      d.__proto__ = b;
-    } || function (d, b) {
-      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    };
-
-    return extendStatics(d, b);
-  };
-
-  return function (d, b) {
-    extendStatics(d, b);
-
-    function __() {
-      this.constructor = d;
-    }
-
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  };
-}();
-
-/**
- * @const
- * @type {Array<string>}
- */
-var ATTRIBUTIONS = ['Map tiles by <a href="https://stamen.com/" target="_blank">Stamen Design</a>, ' + 'under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY' + ' 3.0</a>.', _OSM.ATTRIBUTION];
-/**
- * @type {Object<string, {extension: string, opaque: boolean}>}
- */
-
-var LayerConfig = {
-  'terrain': {
-    extension: 'jpg',
-    opaque: true
-  },
-  'terrain-background': {
-    extension: 'jpg',
-    opaque: true
-  },
-  'terrain-labels': {
-    extension: 'png',
-    opaque: false
-  },
-  'terrain-lines': {
-    extension: 'png',
-    opaque: false
-  },
-  'toner-background': {
-    extension: 'png',
-    opaque: true
-  },
-  'toner': {
-    extension: 'png',
-    opaque: true
-  },
-  'toner-hybrid': {
-    extension: 'png',
-    opaque: false
-  },
-  'toner-labels': {
-    extension: 'png',
-    opaque: false
-  },
-  'toner-lines': {
-    extension: 'png',
-    opaque: false
-  },
-  'toner-lite': {
-    extension: 'png',
-    opaque: true
-  },
-  'watercolor': {
-    extension: 'jpg',
-    opaque: true
-  }
-};
-/**
- * @type {Object<string, {minZoom: number, maxZoom: number}>}
- */
-
-var ProviderConfig = {
-  'terrain': {
-    minZoom: 0,
-    maxZoom: 18
-  },
-  'toner': {
-    minZoom: 0,
-    maxZoom: 20
-  },
-  'watercolor': {
-    minZoom: 0,
-    maxZoom: 18
-  }
-};
-/**
- * @typedef {Object} Options
- * @property {number} [cacheSize] Tile cache size. The default depends on the screen size. Will be ignored if too small.
- * @property {string} layer Layer name.
- * @property {number} [minZoom] Minimum zoom.
- * @property {number} [maxZoom] Maximum zoom.
- * @property {number} [reprojectionErrorThreshold=0.5] Maximum allowed reprojection error (in pixels).
- * Higher values can increase reprojection performance, but decrease precision.
- * @property {import("../Tile.js").LoadFunction} [tileLoadFunction]
- * Optional function to load a tile given a URL. The default is
- * ```js
- * function(imageTile, src) {
- *   imageTile.getImage().src = src;
- * };
- * ```
- * @property {number} [transition] Duration of the opacity transition for rendering.
- * To disable the opacity transition, pass `transition: 0`.
- * @property {string} [url] URL template. Must include `{x}`, `{y}` or `{-y}`, and `{z}` placeholders.
- * @property {boolean} [wrapX=true] Whether to wrap the world horizontally.
- */
-
-/**
- * @classdesc
- * Layer source for the Stamen tile server.
- * @api
- */
-
-var Stamen =
-/** @class */
-function (_super) {
-  __extends(Stamen, _super);
-  /**
-   * @param {Options} options Stamen options.
-   */
-
-
-  function Stamen(options) {
-    var _this = this;
-
-    var i = options.layer.indexOf('-');
-    var provider = i == -1 ? options.layer : options.layer.slice(0, i);
-    var providerConfig = ProviderConfig[provider];
-    var layerConfig = LayerConfig[options.layer];
-    var url = options.url !== undefined ? options.url : 'https://stamen-tiles-{a-d}.a.ssl.fastly.net/' + options.layer + '/{z}/{x}/{y}.' + layerConfig.extension;
-    _this = _super.call(this, {
-      attributions: ATTRIBUTIONS,
-      cacheSize: options.cacheSize,
-      crossOrigin: 'anonymous',
-      maxZoom: options.maxZoom != undefined ? options.maxZoom : providerConfig.maxZoom,
-      minZoom: options.minZoom != undefined ? options.minZoom : providerConfig.minZoom,
-      opaque: layerConfig.opaque,
-      reprojectionErrorThreshold: options.reprojectionErrorThreshold,
-      tileLoadFunction: options.tileLoadFunction,
-      transition: options.transition,
-      url: url,
-      wrapX: options.wrapX
-    }) || this;
-    return _this;
-  }
-
-  return Stamen;
-}(_XYZ.default);
-
-var _default = Stamen;
-exports.default = _default;
-},{"./OSM.js":"node_modules/ol/source/OSM.js","./XYZ.js":"node_modules/ol/source/XYZ.js"}],"index.js":[function(require,module,exports) {
+},{"../util/ext":"node_modules/ol-ext/util/ext.js","./Mask":"node_modules/ol-ext/filter/Mask.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("ol/ol.css");
@@ -71406,12 +71227,6 @@ var _Mask = _interopRequireDefault(require("ol-ext/filter/Mask"));
 
 var _Crop = _interopRequireDefault(require("ol-ext/filter/Crop"));
 
-var _ext = _interopRequireDefault(require("ol-ext/util/ext"));
-
-var _Stamen = _interopRequireDefault(require("ol/source/Stamen.js"));
-
-var _Group = _interopRequireDefault(require("ol/layer/Group"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //is this the right way to pull this in? Or should it just be a single class?
@@ -71442,7 +71257,8 @@ var polygonLayer = new _vector.default({
 });
 var map = new _map.default({
   target: 'map',
-  layers: [osm, debugLayer, labels],
+  layers: [osm, debugLayer, labels //polygonLayer
+  ],
   view: new _view.default({
     center: [0, 0],
     zoom: 2
@@ -71482,8 +71298,6 @@ function onClick(id, callback) {
   document.getElementById(id).addEventListener('click', callback);
 }
 
-var check = 0;
-
 function loadTiles(polygon, ftr) {
   if (global_url != '') {
     var url = encodeURIComponent(global_url);
@@ -71497,14 +71311,12 @@ function loadTiles(polygon, ftr) {
     var defaultUrlFunction = cog.getTileUrlFunction();
     cog.setTileUrlFunction(function (tileCoord, pixelRatio, projection) {
       var condition = polygon.intersectsExtent(this.getTileGrid().getTileCoordExtent(tileCoord));
-      check = check + 1;
 
       if (condition) {
         return defaultUrlFunction(tileCoord, pixelRatio, projection);
       }
     });
-    var layers = map.getLayers();
-    layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
+    var layers = map.getLayers(); //layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
 
     map.addLayer(cogLayer); //map.addLayer(polygonLayer)
 
@@ -71539,44 +71351,13 @@ function zoomLoad(name) {
     (0, _jquery.getJSON)(boundsUrl, function (result) {
       var extent = (0, _proj.transformExtent)(result.bounds, 'EPSG:4326', 'EPSG:3857');
       map.getView().fit(extent, map.getSize());
-      /*var tilesUrl = createTilesUrl(url);
-        var cog=new XYZ({
-        url: tilesUrl
-      });
-        var cogLayer = new TileLayer({
-        type: 'base',
-        source: cog
-      });
-      cog.on('tileloadstart', function() {
-        console.log("loading started")
-      });
-      
-      cog.on('tileloadend', function() {
-        console.log("loading ended")
-      });
-      
-      var defaultUrlFunction = cog.getTileUrlFunction();
-      cog.setTileUrlFunction( function(tileCoord, pixelRatio, projection) {
-          console.log("tile coords=>",tileCoord)
-        //var condition=countryGeometry.intersectsExtent(this.getTileGrid().getTileCoordExtent(tileCoord));
-          if (1) {
-              return defaultUrlFunction(tileCoord, pixelRatio, projection);
-          }
-      });
-        var layers = map.getLayers();
-      layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
-      //map.addLayer(cogLayer);
-      update({
-        url: name
-      });*/
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alert("Request failed. Are you sure '" + name + "' is a valid COG?  ");
-    }); //TODO - include link to COG validator
+    });
   }
 }
 /* 
  * This creates the tiles URL. Change here to use another lambda server, or change the default params.
- * TODO: enable setting of things like RGB and linear stretch in the GUI, and then adjust the url's here.
  */
 
 
@@ -71651,15 +71432,13 @@ function listener(newState) {
       })
     });
     map.addLayer(cogLayer);
-    document.getElementById("cog-url").value = newState.url; //This had an attempt to move to a COG location, but then it messed up with existing hashes.
-    //May consider adding a button that will zoom the user to the location of the COG displayed.
+    document.getElementById("cog-url").value = newState.url;
   }
 }
 
 function ValidURL(str) {
   if (!_validUrl.default.isUri(str)) {
-    alert("'" + str + "' is not a valid URL. Did you forget to include http://? "); //TODO - automatically add in http:// if it's not included and check that.
-
+    alert("'" + str + "' is not a valid URL. Did you forget to include http://? ");
     return false;
   } else {
     return true;
@@ -71693,7 +71472,7 @@ window.onclick = function (event) {
     modal.style.display = "none";
   }
 };
-},{"ol/ol.css":"node_modules/ol/ol.css","ol/map":"node_modules/ol/map.js","ol/view":"node_modules/ol/view.js","ol/layer/Tile.js":"node_modules/ol/layer/Tile.js","ol/layer/vector":"node_modules/ol/layer/vector.js","ol/source/xyz":"node_modules/ol/source/xyz.js","ol/proj":"node_modules/ol/proj.js","ol-hashed":"node_modules/ol-hashed/index.js","hashed":"node_modules/hashed/lib/index.js","jquery":"node_modules/jquery/dist/jquery.js","valid-url":"node_modules/valid-url/index.js","ol/source/vector":"node_modules/ol/source/vector.js","ol/style/Fill":"node_modules/ol/style/Fill.js","ol/interaction/Draw":"node_modules/ol/interaction/Draw.js","ol/source/OSM":"node_modules/ol/source/OSM.js","ol/source/TileDebug":"node_modules/ol/source/TileDebug.js","ol/geom/polygon":"node_modules/ol/geom/polygon.js","ol/feature":"node_modules/ol/feature.js","ol-ext/filter/Mask":"node_modules/ol-ext/filter/Mask.js","ol-ext/filter/Crop":"node_modules/ol-ext/filter/Crop.js","ol-ext/util/ext":"node_modules/ol-ext/util/ext.js","ol/source/Stamen.js":"node_modules/ol/source/Stamen.js","ol/layer/Group":"node_modules/ol/layer/Group.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"ol/ol.css":"node_modules/ol/ol.css","ol/map":"node_modules/ol/map.js","ol/view":"node_modules/ol/view.js","ol/layer/Tile.js":"node_modules/ol/layer/Tile.js","ol/layer/vector":"node_modules/ol/layer/vector.js","ol/source/xyz":"node_modules/ol/source/xyz.js","ol/proj":"node_modules/ol/proj.js","ol-hashed":"node_modules/ol-hashed/index.js","hashed":"node_modules/hashed/lib/index.js","jquery":"node_modules/jquery/dist/jquery.js","valid-url":"node_modules/valid-url/index.js","ol/source/vector":"node_modules/ol/source/vector.js","ol/style/Fill":"node_modules/ol/style/Fill.js","ol/interaction/Draw":"node_modules/ol/interaction/Draw.js","ol/source/OSM":"node_modules/ol/source/OSM.js","ol/source/TileDebug":"node_modules/ol/source/TileDebug.js","ol/geom/polygon":"node_modules/ol/geom/polygon.js","ol/feature":"node_modules/ol/feature.js","ol-ext/filter/Mask":"node_modules/ol-ext/filter/Mask.js","ol-ext/filter/Crop":"node_modules/ol-ext/filter/Crop.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -71721,7 +71500,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58657" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53329" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
