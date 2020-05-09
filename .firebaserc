@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "cog-server-side-rendering",
-    "cog-1": "cog-server-side-rendering"
+    "cog-1": "cog-server-side-rendering",
+    "ndvi-cog-rendering": "ndvi-cog-rendering-c0b10"
   }
 }

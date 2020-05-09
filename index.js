@@ -13,6 +13,7 @@ import sourceVector from 'ol/source/vector';
 import Fill from 'ol/style/Fill';
 import Draw from 'ol/interaction/Draw';
 import OSM from 'ol/source/OSM';
+import TileDebug from 'ol/source/TileDebug';
 
 import Polygon from 'ol/geom/polygon';
 import Feature from 'ol/feature';
@@ -21,8 +22,6 @@ import Crop from 'ol-ext/filter/Crop';
 import ol_ext_inherits from 'ol-ext/util/ext';
 import Stamen from 'ol/source/Stamen.js';
 import LayerGroup from 'ol/layer/Group'
-
-
 
 var global_url='';
 
@@ -41,6 +40,10 @@ var mapLayer=new TileLayer({
   })
 });
 
+var debugLayer=new TileLayer({
+  source: new TileDebug()
+});
+
 var osm = new TileLayer({ source: new OSM() });
 
 var source = new sourceVector({wrapX: false});
@@ -52,7 +55,8 @@ var polygonLayer = new VectorLayer({
 const map = new Map({
   target: 'map',
   layers: [
-    mapLayer,
+    osm,
+    debugLayer,
     labels
   ],
   view: new View({
@@ -65,9 +69,7 @@ source.on('addfeature', function(evt){
   var feature = evt.feature;
   var polygon=feature.getGeometry();
   var coords = feature.getGeometry().getCoordinates();
-
   loadTiles(polygon,feature);
-
   console.log("coords",coords)
 });
 
@@ -137,11 +139,9 @@ function loadTiles(polygon,ftr){
     }
 
     setFilter();
-
     update({
       url: name
     });
-
   }
 
 }
@@ -214,22 +214,29 @@ function zoomLoad(name) {
 // })
 
 onClick('sample-1', function() {
-  var planetUrl = "https://storetiff.s3.us-east-2.amazonaws.com/san_012.tif"
-  document.getElementById("cog-url").value = planetUrl;
+  var planetUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/ndvikt_cog.tif"
+ // document.getElementById("cog-url").value = planetUrl;
   global_url=planetUrl;
   zoomLoad(planetUrl);
 });
 
 onClick('sample-2', function() {
-  var oamUrl = "https://storetiff.s3.us-east-2.amazonaws.com/san_location_2.tif"
-  document.getElementById("cog-url").value = oamUrl;
+  var oamUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/ndvi_pz_cog.tif"
+  //document.getElementById("cog-url").value = oamUrl;
   global_url=oamUrl;
   zoomLoad(oamUrl);
 });
 
 onClick('sample-3', function() {
   var oamUrl = "http://oin-hotosm.s3.amazonaws.com/59c66c5223c8440011d7b1e4/0/7ad397c0-bba2-4f98-a08a-931ec3a6e943.tif"
-  document.getElementById("cog-url").value = oamUrl;
+  //.getElementById("cog-url").value = oamUrl;
+  global_url=oamUrl;
+  zoomLoad(oamUrl);
+});
+
+onClick('sample-4', function() {
+  var oamUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/sdd.tif"
+  //.getElementById("cog-url").value = oamUrl;
   global_url=oamUrl;
   zoomLoad(oamUrl);
 });

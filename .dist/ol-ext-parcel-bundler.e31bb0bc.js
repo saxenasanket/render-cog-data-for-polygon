@@ -69521,7 +69521,210 @@ function (_super) {
 
 var _default = OSM;
 exports.default = _default;
-},{"./XYZ.js":"node_modules/ol/source/XYZ.js"}],"node_modules/ol/geom/polygon.js":[function(require,module,exports) {
+},{"./XYZ.js":"node_modules/ol/source/XYZ.js"}],"node_modules/ol/source/TileDebug.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Tile = _interopRequireDefault(require("../Tile.js"));
+
+var _TileState = _interopRequireDefault(require("../TileState.js"));
+
+var _dom = require("../dom.js");
+
+var _size = require("../size.js");
+
+var _XYZ = _interopRequireDefault(require("./XYZ.js"));
+
+var _tilecoord = require("../tilecoord.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @module ol/source/TileDebug
+ */
+var __extends = void 0 && (void 0).__extends || function () {
+  var extendStatics = function (d, b) {
+    extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    };
+
+    return extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+var LabeledTile =
+/** @class */
+function (_super) {
+  __extends(LabeledTile, _super);
+  /**
+   * @param {import("../tilecoord.js").TileCoord} tileCoord Tile coordinate.
+   * @param {import("../size.js").Size} tileSize Tile size.
+   * @param {string} text Text.
+   */
+
+
+  function LabeledTile(tileCoord, tileSize, text) {
+    var _this = _super.call(this, tileCoord, _TileState.default.LOADED) || this;
+    /**
+    * @private
+    * @type {import("../size.js").Size}
+    */
+
+
+    _this.tileSize_ = tileSize;
+    /**
+    * @private
+    * @type {string}
+    */
+
+    _this.text_ = text;
+    /**
+    * @private
+    * @type {HTMLCanvasElement}
+    */
+
+    _this.canvas_ = null;
+    return _this;
+  }
+  /**
+  * Get the image element for this tile.
+  * @return {HTMLCanvasElement} Image.
+  */
+
+
+  LabeledTile.prototype.getImage = function () {
+    if (this.canvas_) {
+      return this.canvas_;
+    } else {
+      var tileSize = this.tileSize_;
+      var context = (0, _dom.createCanvasContext2D)(tileSize[0], tileSize[1]);
+      context.strokeStyle = 'grey';
+      context.strokeRect(0.5, 0.5, tileSize[0] + 0.5, tileSize[1] + 0.5);
+      context.fillStyle = 'grey';
+      context.strokeStyle = 'white';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.font = '24px sans-serif';
+      context.lineWidth = 4;
+      context.strokeText(this.text_, tileSize[0] / 2, tileSize[1] / 2, tileSize[0]);
+      context.fillText(this.text_, tileSize[0] / 2, tileSize[1] / 2, tileSize[0]);
+      this.canvas_ = context.canvas;
+      return context.canvas;
+    }
+  };
+  /**
+  * @override
+  */
+
+
+  LabeledTile.prototype.load = function () {};
+
+  return LabeledTile;
+}(_Tile.default);
+/**
+ * @typedef {Object} Options
+ * @property {import("../proj.js").ProjectionLike} [projection='EPSG:3857'] Optional projection.
+ * @property {import("../tilegrid/TileGrid.js").default} [tileGrid] Tile grid.
+ * @property {boolean} [wrapX=true] Whether to wrap the world horizontally.
+ * @property {number} [zDirection=0] Set to `1` when debugging `VectorTile` sources with
+ * a default configuration. Indicates which resolution should be used by a renderer if
+ * the view resolution does not match any resolution of the tile source. If 0, the nearest
+ * resolution will be used. If 1, the nearest lower resolution will be used. If -1, the
+ * nearest higher resolution will be used.
+ */
+
+/**
+ * @classdesc
+ * A pseudo tile source, which does not fetch tiles from a server, but renders
+ * a grid outline for the tile grid/projection along with the coordinates for
+ * each tile. See examples/canvas-tiles for an example.
+ *
+ * Uses Canvas context2d, so requires Canvas support.
+ * @api
+ */
+
+
+var TileDebug =
+/** @class */
+function (_super) {
+  __extends(TileDebug, _super);
+  /**
+   * @param {Options=} opt_options Debug tile options.
+   */
+
+
+  function TileDebug(opt_options) {
+    var _this = this;
+    /**
+     * @type {Options}
+     */
+
+
+    var options = opt_options || {};
+    _this = _super.call(this, {
+      opaque: false,
+      projection: options.projection,
+      tileGrid: options.tileGrid,
+      wrapX: options.wrapX !== undefined ? options.wrapX : true,
+      zDirection: options.zDirection
+    }) || this;
+    return _this;
+  }
+  /**
+  * @inheritDoc
+  */
+
+
+  TileDebug.prototype.getTile = function (z, x, y) {
+    var tileCoordKey = (0, _tilecoord.getKeyZXY)(z, x, y);
+
+    if (this.tileCache.containsKey(tileCoordKey)) {
+      return (
+        /** @type {!LabeledTile} */
+        this.tileCache.get(tileCoordKey)
+      );
+    } else {
+      var tileSize = (0, _size.toSize)(this.tileGrid.getTileSize(z));
+      var tileCoord = [z, x, y];
+      var textTileCoord = this.getTileCoordForTileUrlFunction(tileCoord);
+      var text = void 0;
+
+      if (textTileCoord) {
+        text = 'z:' + textTileCoord[0] + ' x:' + textTileCoord[1] + ' y:' + textTileCoord[2];
+      } else {
+        text = 'none';
+      }
+
+      var tile = new LabeledTile(tileCoord, tileSize, text);
+      this.tileCache.set(tileCoordKey, tile);
+      return tile;
+    }
+  };
+
+  return TileDebug;
+}(_XYZ.default);
+
+var _default = TileDebug;
+exports.default = _default;
+},{"../Tile.js":"node_modules/ol/Tile.js","../TileState.js":"node_modules/ol/TileState.js","../dom.js":"node_modules/ol/dom.js","../size.js":"node_modules/ol/size.js","./XYZ.js":"node_modules/ol/source/XYZ.js","../tilecoord.js":"node_modules/ol/tilecoord.js"}],"node_modules/ol/geom/polygon.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -71193,6 +71396,8 @@ var _Draw = _interopRequireDefault(require("ol/interaction/Draw"));
 
 var _OSM = _interopRequireDefault(require("ol/source/OSM"));
 
+var _TileDebug = _interopRequireDefault(require("ol/source/TileDebug"));
+
 var _polygon = _interopRequireDefault(require("ol/geom/polygon"));
 
 var _feature = _interopRequireDefault(require("ol/feature"));
@@ -71223,6 +71428,9 @@ var mapLayer = new _Tile.default({
     url: 'https://{1-4}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
   })
 });
+var debugLayer = new _Tile.default({
+  source: new _TileDebug.default()
+});
 var osm = new _Tile.default({
   source: new _OSM.default()
 });
@@ -71234,7 +71442,7 @@ var polygonLayer = new _vector.default({
 });
 var map = new _map.default({
   target: 'map',
-  layers: [mapLayer, labels],
+  layers: [osm, debugLayer, labels],
   view: new _view.default({
     center: [0, 0],
     zoom: 2
@@ -71381,20 +71589,26 @@ function createTilesUrl(url) {
 
 
 onClick('sample-1', function () {
-  var planetUrl = "https://storetiff.s3.us-east-2.amazonaws.com/san_012.tif";
-  document.getElementById("cog-url").value = planetUrl;
+  var planetUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/ndvikt_cog.tif"; // document.getElementById("cog-url").value = planetUrl;
+
   global_url = planetUrl;
   zoomLoad(planetUrl);
 });
 onClick('sample-2', function () {
-  var oamUrl = "https://storetiff.s3.us-east-2.amazonaws.com/san_location_2.tif";
-  document.getElementById("cog-url").value = oamUrl;
+  var oamUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/ndvi_pz_cog.tif"; //document.getElementById("cog-url").value = oamUrl;
+
   global_url = oamUrl;
   zoomLoad(oamUrl);
 });
 onClick('sample-3', function () {
-  var oamUrl = "http://oin-hotosm.s3.amazonaws.com/59c66c5223c8440011d7b1e4/0/7ad397c0-bba2-4f98-a08a-931ec3a6e943.tif";
-  document.getElementById("cog-url").value = oamUrl;
+  var oamUrl = "http://oin-hotosm.s3.amazonaws.com/59c66c5223c8440011d7b1e4/0/7ad397c0-bba2-4f98-a08a-931ec3a6e943.tif"; //.getElementById("cog-url").value = oamUrl;
+
+  global_url = oamUrl;
+  zoomLoad(oamUrl);
+});
+onClick('sample-4', function () {
+  var oamUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/sdd.tif"; //.getElementById("cog-url").value = oamUrl;
+
   global_url = oamUrl;
   zoomLoad(oamUrl);
 });
@@ -71479,7 +71693,7 @@ window.onclick = function (event) {
     modal.style.display = "none";
   }
 };
-},{"ol/ol.css":"node_modules/ol/ol.css","ol/map":"node_modules/ol/map.js","ol/view":"node_modules/ol/view.js","ol/layer/Tile.js":"node_modules/ol/layer/Tile.js","ol/layer/vector":"node_modules/ol/layer/vector.js","ol/source/xyz":"node_modules/ol/source/xyz.js","ol/proj":"node_modules/ol/proj.js","ol-hashed":"node_modules/ol-hashed/index.js","hashed":"node_modules/hashed/lib/index.js","jquery":"node_modules/jquery/dist/jquery.js","valid-url":"node_modules/valid-url/index.js","ol/source/vector":"node_modules/ol/source/vector.js","ol/style/Fill":"node_modules/ol/style/Fill.js","ol/interaction/Draw":"node_modules/ol/interaction/Draw.js","ol/source/OSM":"node_modules/ol/source/OSM.js","ol/geom/polygon":"node_modules/ol/geom/polygon.js","ol/feature":"node_modules/ol/feature.js","ol-ext/filter/Mask":"node_modules/ol-ext/filter/Mask.js","ol-ext/filter/Crop":"node_modules/ol-ext/filter/Crop.js","ol-ext/util/ext":"node_modules/ol-ext/util/ext.js","ol/source/Stamen.js":"node_modules/ol/source/Stamen.js","ol/layer/Group":"node_modules/ol/layer/Group.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"ol/ol.css":"node_modules/ol/ol.css","ol/map":"node_modules/ol/map.js","ol/view":"node_modules/ol/view.js","ol/layer/Tile.js":"node_modules/ol/layer/Tile.js","ol/layer/vector":"node_modules/ol/layer/vector.js","ol/source/xyz":"node_modules/ol/source/xyz.js","ol/proj":"node_modules/ol/proj.js","ol-hashed":"node_modules/ol-hashed/index.js","hashed":"node_modules/hashed/lib/index.js","jquery":"node_modules/jquery/dist/jquery.js","valid-url":"node_modules/valid-url/index.js","ol/source/vector":"node_modules/ol/source/vector.js","ol/style/Fill":"node_modules/ol/style/Fill.js","ol/interaction/Draw":"node_modules/ol/interaction/Draw.js","ol/source/OSM":"node_modules/ol/source/OSM.js","ol/source/TileDebug":"node_modules/ol/source/TileDebug.js","ol/geom/polygon":"node_modules/ol/geom/polygon.js","ol/feature":"node_modules/ol/feature.js","ol-ext/filter/Mask":"node_modules/ol-ext/filter/Mask.js","ol-ext/filter/Crop":"node_modules/ol-ext/filter/Crop.js","ol-ext/util/ext":"node_modules/ol-ext/util/ext.js","ol/source/Stamen.js":"node_modules/ol/source/Stamen.js","ol/layer/Group":"node_modules/ol/layer/Group.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -71507,7 +71721,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53848" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58657" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -179,13 +179,24 @@
     text-decoration: none;
     cursor: pointer;
   }
+
   </style>
 </head>
 <body>
   <div id="map" class="map" ></div>
   <div class="controls">
     <!--p><input type="checkbox" id="labels" name="labels"  checked="true"> Labels</p--> 
-    <section class="flexbox">      
+    <b><h3 style="color:black">NDVI RENDERING ASSESSMENT<h3></b>
+
+    <div class="samples">
+        <button type="button" class="btn btn-primary" id="sample-1"><b>NDVI COG 1</b></button>
+        <button type="button" class="btn btn-primary" id="sample-2"><b>NDVI COG 2</b></button>
+        <button type="button" class="btn btn-primary" id="sample-4"><b>Sample NDVI COG</b></button>
+        <button type="button" class="btn btn-primary" id="sample-3"><b>Sample COG</b></button>
+        <button type="button" class="btn btn-danger pull-right" id="draw-button"><b>START DRAWING</b></button>
+    </div>
+
+    <section class="flexbox" style="visibility: hidden">      
       <div class="text"> COG URL:</div> 
       <div class="stretch">
         <input type="text" class="text-field" name="cog-url" id="cog-url"  placeholder="Enter COG URL or click on a sample" />
@@ -198,12 +209,6 @@
         <input type="text" class="text-field"  name="cog-url" id="cog-url"  size="110" value="http://oin-hotosm.s3.amazonaws.com/594ab0ba1b114600111194a3/0/d66720c4-148c-4e11-9d54-4ae2a6ba6351.tif"> 
         <button class="button" id="submit-url">Submit</button> -->
       </section> 
-      <div class="samples">
-        <button class="button" id="sample-1">COG 1</button>
-        <button class="button" id="sample-2">COG 2</button>
-        <button class="button" id="sample-3">sample COG</button>
-        <button class="button" id="draw-button"><b>DRAW</b></button>
-      </div>
     </div>
   </div>
   

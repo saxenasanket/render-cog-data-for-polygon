@@ -1,7 +1,6 @@
 {
   "hosting": {
-    "site":"ndvi-cog-rendering",
-    "public": ".dist",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
