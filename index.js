@@ -55,7 +55,7 @@ const map = new Map({
   layers: [
     osm,
     debugLayer,
-    labels,
+    //labels,
     //polygonLayer
   ],
   view: new View({

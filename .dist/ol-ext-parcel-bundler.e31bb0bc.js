@@ -71257,7 +71257,8 @@ var polygonLayer = new _vector.default({
 });
 var map = new _map.default({
   target: 'map',
-  layers: [osm, debugLayer, labels //polygonLayer
+  layers: [osm, debugLayer //labels,
+  //polygonLayer
   ],
   view: new _view.default({
     center: [0, 0],
@@ -71500,7 +71501,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53329" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54565" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
