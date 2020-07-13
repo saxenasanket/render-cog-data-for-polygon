@@ -21,42 +21,22 @@ import Mask from 'ol-ext/filter/Mask';
 import Crop from 'ol-ext/filter/Crop';
 
 
-var global_url='';
-
-var labels = new TileLayer({
-  title: 'Labels',
-  source: new XYZ({
-    url: 'https://{1-4}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png',
-    attributions: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, ' + 
-    '© <a href="https://carto.com/attribution">CARTO</a>',
-  })
-});
-
-var mapLayer=new TileLayer({
-  source: new XYZ({
-    url: 'https://{1-4}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
-  })
-});
-
-var debugLayer=new TileLayer({
-  source: new TileDebug()
-});
-
-var osm = new TileLayer({ source: new OSM() });
+var cogUrl='';
 
 var source = new sourceVector({wrapX: false});
 
-var polygonLayer = new VectorLayer({
-  source: source
+var osm = new TileLayer({
+  source: new OSM()
+});
+var debugLayer=new TileLayer({
+ source: new TileDebug()
 });
 
 const map = new Map({
   target: 'map',
   layers: [
     osm,
-    debugLayer,
-    //labels,
-    //polygonLayer
+    debugLayer
   ],
   view: new View({
     center: [0, 0],
@@ -64,51 +44,37 @@ const map = new Map({
   })
 });
 
-source.on('addfeature', function(evt){
-  var feature = evt.feature;
-  var polygon=feature.getGeometry();
-  var coords = feature.getGeometry().getCoordinates();
-  loadTiles(polygon,feature);
-  console.log("coords",coords)
-});
 
 var draw; 
 function addInteraction() {
-  var value = 'Polygon';
-  if (value !== 'None') {
-    draw = new Draw({
-      source: source,
-      type: 'Polygon'
-    });
-    draw.on('drawend',function (e) {
-      var currentFeature = e.feature;//this is the feature fired the event
-      var restOfFeats = source.getFeatures();//rest of feats
-      var allFeats = restOfFeats.concat(currentFeature);//concatenate the event feat to the array of source feats
-      console.log(e.feature);
-      });
-    map.addInteraction(draw);
-  }
+  draw = new Draw({
+    source: source,
+    type: 'Polygon'
+  });
+  map.addInteraction(draw);
 }
 
-function onClick(id, callback) {
-  document.getElementById(id).addEventListener('click', callback);
-}
+source.on('addfeature', function(evt){
+  var feature = evt.feature;
+  var polygon=feature.getGeometry();
+  loadTiles(polygon,feature);
+});
 
 function loadTiles(polygon,ftr){
+  if(cogUrl!=''){
+    var url = encodeURIComponent(cogUrl);
 
-  if(global_url!=''){
-
-    var url = encodeURIComponent(global_url)
+    //adding COG layer to map
     var tilesUrl = createTilesUrl(url);
-
     var cog=new XYZ({
       url: tilesUrl
     });
-
     var cogLayer = new TileLayer({
       source: cog
     });
-    
+    map.addLayer(cogLayer);
+
+    //condition for loading tiles
     var defaultUrlFunction = cog.getTileUrlFunction();
     cog.setTileUrlFunction( function(tileCoord, pixelRatio, projection) {
       var condition=polygon.intersectsExtent(this.getTileGrid().getTileCoordExtent(tileCoord));
@@ -117,25 +83,18 @@ function loadTiles(polygon,ftr){
       } 
     });
 
-    var layers = map.getLayers();
-    //layers.removeAt(2); //remove the previous COG map, so we're not loading extra tiles as we move around.
-    map.addLayer(cogLayer);
-    //map.addLayer(polygonLayer)
-
-    var mask = new Mask({ feature: ftr, inner:false});
+    //cropping loaded TileLayer in polygon shape
     var crop = new Crop({ feature: ftr, inner:false ,fill: new Fill({ color:[0,0,0,0] })});
-
     function setFilter(){
       cogLayer.addFilter(crop);
       crop.set('active', true);
     }
-
     setFilter();
-    update({
-      url: name
-    });
   }
+}
 
+function onClick(id, callback) {
+  document.getElementById(id).addEventListener('click', callback);
 }
 
 function zoomLoad(name) {
@@ -164,30 +123,16 @@ function zoomLoad(name) {
 // })
 
 onClick('sample-1', function() {
-  var planetUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/ndvikt_cog.tif"
+  var planetUrl = "https://s3-us-west-2.amazonaws.com/planet-disaster-data/hurricane-harvey/SkySat_Freeport_s03_20170831T162740Z3.tif"
  // document.getElementById("cog-url").value = planetUrl;
-  global_url=planetUrl;
+  cogUrl=planetUrl;
   zoomLoad(planetUrl);
 });
 
 onClick('sample-2', function() {
-  var oamUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/ndvi_pz_cog.tif"
-  //document.getElementById("cog-url").value = oamUrl;
-  global_url=oamUrl;
-  zoomLoad(oamUrl);
-});
-
-onClick('sample-3', function() {
   var oamUrl = "http://oin-hotosm.s3.amazonaws.com/59c66c5223c8440011d7b1e4/0/7ad397c0-bba2-4f98-a08a-931ec3a6e943.tif"
-  //.getElementById("cog-url").value = oamUrl;
-  global_url=oamUrl;
-  zoomLoad(oamUrl);
-});
-
-onClick('sample-4', function() {
-  var oamUrl = "https://tiffstore.s3-ap-southeast-2.amazonaws.com/sdd.tif"
-  //.getElementById("cog-url").value = oamUrl;
-  global_url=oamUrl;
+  //document.getElementById("cog-url").value = oamUrl;
+  cogUrl=oamUrl;
   zoomLoad(oamUrl);
 });
 
@@ -195,7 +140,7 @@ onClick('submit-url', function(event) {
   event.preventDefault();
   var name = document.getElementById("cog-url").value;
   console.log("submitted url" + name);
-  global_url=name;
+  cogUrl=name;
   zoomLoad(name);
 })
 

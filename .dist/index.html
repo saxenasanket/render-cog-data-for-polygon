@@ -177,22 +177,21 @@
     text-decoration: none;
     cursor: pointer;
   }</style>
-<link rel="stylesheet" href="/ol-ext-parcel-bundler.e31bb0bc.css"></head>
+<link rel="stylesheet" href="/ndvi-cog-rendering.e31bb0bc.css"></head>
 <body>
   <div id="map" class="map"></div>
   <div class="controls">
     <!--p><input type="checkbox" id="labels" name="labels"  checked="true"> Labels</p--> 
-    <b><h3 style="color:black">NDVI RENDERING ASSESSMENT<h3></h3></h3></b>
 
     <div class="samples">
-        <button type="button" class="btn btn-primary" id="sample-1"><b>NDVI COG 1</b></button>
-        <button type="button" class="btn btn-primary" id="sample-2"><b>NDVI COG 2</b></button>
-        <button type="button" class="btn btn-primary" id="sample-4"><b>Sample NDVI COG</b></button>
-        <button type="button" class="btn btn-primary" id="sample-3"><b>Sample COG</b></button>
+        <button type="button" class="btn btn-primary" id="sample-1"><b>COG 1</b></button>
+        <button type="button" class="btn btn-primary" id="sample-2"><b>COG 2</b></button>
         <button type="button" class="btn btn-danger pull-right" id="draw-button"><b>START DRAWING</b></button>
     </div>
 
-    <section class="flexbox" style="visibility: hidden">      
+    <br><br>
+
+    <section class="flexbox">      
       <div class="text"> COG URL:</div> 
       <div class="stretch">
         <input type="text" class="text-field" name="cog-url" id="cog-url" placeholder="Enter COG URL or click on a sample">
@@ -200,11 +199,8 @@
       <div class="normal" id="submit-url">
         <button>Submit</button>
       </div>
+    </section> 
 
-       <!--  
-        <input type="text" class="text-field"  name="cog-url" id="cog-url"  size="110" value="http://oin-hotosm.s3.amazonaws.com/594ab0ba1b114600111194a3/0/d66720c4-148c-4e11-9d54-4ae2a6ba6351.tif"> 
-        <button class="button" id="submit-url">Submit</button> -->
-      </section> 
     </div>
   
   
@@ -269,7 +265,7 @@
 
    
 
-    <script src="/ol-ext-parcel-bundler.e31bb0bc.js"></script>
+    <script src="/ndvi-cog-rendering.e31bb0bc.js"></script>
 
   </body>
   </html>

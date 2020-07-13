@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "render-cog-data-for-polygon",
     "public": "build",
     "ignore": [
       "firebase.json",
@@ -14,3 +15,4 @@
     ]
   }
 }
+
